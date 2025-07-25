@@ -1,0 +1,61 @@
+@import '@fontsource/space-grotesk/400.css';
+@import '@fontsource/space-grotesk/500.css';
+@import '@fontsource/space-grotesk/600.css';
+@import '@fontsource/space-grotesk/700.css';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom neon glow effects */
+.glow-green {
+  box-shadow: 0 0 20px rgba(100, 255, 218, 0.3), 0 0 40px rgba(100, 255, 218, 0.1);
+}
+
+.glow-blue {
+  box-shadow: 0 0 20px rgba(28, 176, 246, 0.3), 0 0 40px rgba(28, 176, 246, 0.1);
+}
+
+.glow-purple {
+  box-shadow: 0 0 20px rgba(155, 89, 182, 0.3), 0 0 40px rgba(155, 89, 182, 0.1);
+}
+
+.btn-glow:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 32px rgba(100, 255, 218, 0.3);
+}
+
+.card-glow:hover {
+  box-shadow: 0 20px 60px rgba(100, 255, 218, 0.1), 0 0 0 1px rgba(100, 255, 218, 0.2);
+  transform: translateY(-5px) scale(1.02);
+}
+
+/* Matrix animation background */
+.matrix-bg {
+  background-image: 
+    linear-gradient(90deg, rgba(100, 255, 218, 0.03) 1px, transparent 1px),
+    linear-gradient(rgba(100, 255, 218, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: matrix-scroll 20s linear infinite;
+}
+
+@keyframes matrix-scroll {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(50px, 50px); }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  background-color: #191a23;
+  color: #ffffff;
+}
