@@ -1,7 +1,9 @@
 // No need for axios if we use fetch consistently
 // import axios from 'axios'; 
 
-const API_BASE_URL = 'http://127.0.0.1:8000/api';
+// frontend/src/services/api.ts
+
+const API_BASE_URL = 'https://vishwas-blogsite.onrender.com/api';
 
 export const fetchBlogPosts = async () => {
   const response = await fetch(`${API_BASE_URL}/blog-posts/`);
