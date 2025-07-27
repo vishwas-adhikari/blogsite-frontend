@@ -26,7 +26,8 @@ const ProjectSection: React.FC = () => {
     fetchProjects()
       .then((data: Project[]) => {
         // Only display first 6 projects for homepage preview
-        setProjects(data.slice(0, 6)); 
+        setProjects(data.slice(0, 3)); // <-- LIMIT TO 3 FOR HOMEPAGE
+        // Set loading to false after data is fetched
         setLoading(false);
       })
       .catch((err: unknown) => {

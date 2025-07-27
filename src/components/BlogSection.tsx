@@ -28,7 +28,8 @@ const BlogSection: React.FC = () => {
       .then((data: BlogPost[]) => {
         // --- THIS IS THE CHANGE ---
         // We now only take the first 6 items from the API response for the homepage.
-        setAllPosts(data.slice(0, 9)); 
+        setAllPosts(data.slice(0, 3)); // <-- LIMIT TO 3 FOR HOMEPAGE
+        // Dynamically create the list of unique tags from the fetched posts
         const uniqueTags = new Set(data.flatMap((post) => post.tags.map(tag => tag.name)));
         setAllTags(['All', ...Array.from(uniqueTags)]);
         setLoading(false);
