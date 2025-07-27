@@ -19,7 +19,7 @@ const Footer: React.FC = () => {
           <div className="text-center">
             <p className="text-gray-400 mb-3 text-sm">Ready to collaborate?</p>
             <a
-              href="mailto:vishwas.s.1002@gmail.com"
+              href="https://www.linkedin.com/in/vishwasadhikari/"
               className="bg-white text-black px-6 py-2 rounded-full font-semibold text-sm inline-flex items-center space-x-2 shadow-2xl hover:scale-105 transition-all duration-300"
             >
               <Mail className="w-4 h-4" />
@@ -48,7 +48,7 @@ const Footer: React.FC = () => {
               <Linkedin className="w-4 h-4" />
             </a>
             <a
-              href="mailto:vishwas.s.1002@gmail.com"
+              href="https://www.linkedin.com/in/vishwasadhikari/"
               className="bg-gray-800 text-white p-2 rounded-full hover:bg-white hover:text-black transition-all duration-300 border border-gray-700 hover:shadow-2xl"
               aria-label="Email"
             >
@@ -75,7 +75,7 @@ const Footer: React.FC = () => {
             <a href="#" className="hover:text-white transition-colors duration-300">Privacy</a>
             <a href="#" className="hover:text-white transition-colors duration-300">Terms</a>
             <a
-              href="mailto:vishwas.s.1002@gmail.com"
+              href="https://www.linkedin.com/in/vishwasadhikari/"
               className="hover:text-white transition-colors duration-300"
             >
               Contact
