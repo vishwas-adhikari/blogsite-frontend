@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, Clock, ExternalLink, Search, Filter } from 'lucide-react';
+import { Calendar, Clock, ExternalLink, Search, Filter, ArrowLeft } from 'lucide-react';
 import { fetchBlogPosts } from '../services/api';
 
 interface BlogPost {
   id: number;
   title: string;
   slug: string;
-  content: string;
+  content: string; // This can be removed if not used for searching
   image: string;
   tags: { id: number; name: string }[];
   publication_date: string;
   read_time: number;
-  excerpt: string;
+  excerpt: string; // We'll use the excerpt from the API
 }
 
-const BlogSection: React.FC = () => {
+const AllBlogsPage: React.FC = () => {
   const [allPosts, setAllPosts] = useState<BlogPost[]>([]);
   const [allTags, setAllTags] = useState<string[]>(['All']);
   const [searchTerm, setSearchTerm] = useState('');
@@ -24,11 +24,10 @@ const BlogSection: React.FC = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    // Fetch ALL posts, no .slice()
     fetchBlogPosts()
       .then((data: BlogPost[]) => {
-        // --- THIS IS THE CHANGE ---
-        // We now only take the first 6 items from the API response for the homepage.
-        setAllPosts(data.slice(0, 9)); 
+        setAllPosts(data);
         const uniqueTags = new Set(data.flatMap((post) => post.tags.map(tag => tag.name)));
         setAllTags(['All', ...Array.from(uniqueTags)]);
         setLoading(false);
@@ -43,7 +42,7 @@ const BlogSection: React.FC = () => {
 
   const filteredPosts = allPosts.filter(post => {
     const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()); // Searching excerpt now
+                         post.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesTag = selectedTag === 'All' || post.tags.some(tag => tag.name === selectedTag);
     return matchesSearch && matchesTag;
   });
@@ -52,19 +51,16 @@ const BlogSection: React.FC = () => {
   if (error) return <div className="text-center text-red-500 py-20">{error}</div>;
 
   return (
-    <section id="blogs" className="py-16 px-6 bg-[#191a23] relative overflow-hidden">
+    <section id="all-blogs" className="py-20 px-6 bg-[#191a23]">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-            Latest <span className="text-green-400">Blogs</span>
-          </h2>
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            Deep dives into cybersecurity, CTF writeups, and technical insights from the front lines of digital security.
-          </p>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            All <span className="text-green-400">Articles</span>
+          </h1>
+          <p className="text-lg text-gray-400">Browse the full archive of technical writeups.</p>
         </div>
 
-        {/* Search and Filter */}
+        {/* --- THIS IS THE MISSING JSX FOR SEARCH AND FILTER --- */}
         <div className="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
           <div className="relative w-full md:w-80">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -92,8 +88,9 @@ const BlogSection: React.FC = () => {
             ))}
           </div>
         </div>
+        {/* --- END OF MISSING JSX --- */}
 
-        {/* Blog Grid */}
+        {/* --- THIS IS THE MISSING JSX FOR THE BLOG GRID --- */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredPosts.map((post) => (
             <article
@@ -125,33 +122,33 @@ const BlogSection: React.FC = () => {
                   ))}
                 </div>
                 <Link to={`/blog/${post.slug}`} className="w-full bg-white text-black py-2 px-4 rounded-full font-semibold text-sm hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2">
-                  <span>Read more</span>
+                  <span>Read Fully</span>
                   <ExternalLink className="w-3 h-3" />
                 </Link>
               </div>
             </article>
           ))}
         </div>
+        {/* --- END OF MISSING JSX --- */}
 
-        {filteredPosts.length === 0 && !loading && (
+        {/* --- THIS IS THE MISSING JSX FOR THE "NO ARTICLES" MESSAGE --- */}
+        {filteredPosts.length === 0 && (
           <div className="text-center py-12">
             <Filter className="w-12 h-12 text-gray-600 mx-auto mb-3" />
             <p className="text-lg text-gray-400">No articles found matching your criteria.</p>
           </div>
         )}
-
-        {/* --- ADD THIS NEW SECTION AT THE BOTTOM --- */}
+        {/* --- END OF MISSING JSX --- */}
+        
         <div className="text-center mt-12">
-          <Link 
-            to="/blogs" 
-            className="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-full hover:bg-white hover:text-black transition-colors"
-          >
-            Explore All Articles
-          </Link>
+            <Link to="/" className="bg-white text-black px-6 py-3 rounded-full font-semibold inline-flex items-center space-x-2 hover:scale-105 transition-all duration-300">
+                <ArrowLeft className="w-4 h-4" />
+                <span>Back to Home</span>
+            </Link>
         </div>
       </div>
     </section>
   );
 };
 
-export default BlogSection;
+export default AllBlogsPage;

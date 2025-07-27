@@ -7,6 +7,9 @@ import ProjectSection from './components/ProjectSection';
 import AboutSection from './components/AboutSection';
 import Footer from './components/Footer';
 import BlogDetail from './components/BlogDetail';
+// Import the new AllBlogsPage component
+import AllBlogsPage from './components/AllBlogsPage';
+import AllProjectsPage from './components/AllProjectsPage'; // <-- IMPORT NEW PAGE
 
 // A simple component for the homepage layout
 const HomePage = () => (
@@ -29,6 +32,11 @@ function App() {
           
           {/* THE CRITICAL FIX: The path now correctly uses ':slug' */}
           <Route path="/blog/:slug" element={<BlogDetail />} />
+
+            
+            {/* --- ADD THESE TWO NEW ROUTES --- */}
+            <Route path="/blogs" element={<AllBlogsPage />} />
+            <Route path="/projects" element={<AllProjectsPage />} />
         </Routes>
       </main>
       <Footer />
