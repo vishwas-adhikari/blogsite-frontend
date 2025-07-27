@@ -57,7 +57,7 @@ const ProjectSection: React.FC = () => {
         {/* Projects Grid - THE ONLY CHANGE IS HERE */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* We now .slice(0, 6) the full list to only display the first 6 projects */}
-          {fullProjectList.slice(0,3).map((project) => (
+          {fullProjectList.slice(0,6).map((project) => (
             <div
               key={project.id}
               className="bg-gray-800/30 backdrop-blur-sm rounded-xl overflow-hidden shadow-xl border border-gray-700/50 transition-all duration-500 card-glow group"

@@ -101,7 +101,7 @@ const BlogSection: React.FC = () => {
         {/* Blog Grid - THE ONLY CHANGE IS HERE */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* We now .slice(0, 6) the *filtered* list, not the original one */}
-          {filteredPosts.slice(0,3).map((post) => (
+          {filteredPosts.slice(0,9).map((post) => (
             <article
               key={post.id}
               className="bg-gray-800/50 rounded-xl overflow-hidden shadow-xl border border-gray-700/50 transition-all duration-500 card-glow group"
