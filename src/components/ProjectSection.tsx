@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'; // Used for internal navigation
-import { Github } from 'lucide-react'; // GitHub icon component
-import { fetchProjects } from '../services/api'; // API call to fetch project data
+import { Link } from 'react-router-dom'; // Import Link for the "Explore All" button
+import { Github } from 'lucide-react';
+import { fetchProjects } from '../services/api';
 
-// Define the shape of a project object
 interface Project {
   id: number;
   title: string;
@@ -14,20 +13,21 @@ interface Project {
 }
 
 const ProjectSection: React.FC = () => {
-  // State to hold fetched projects
-  const [projects, setProjects] = useState<Project[]>([]);
-  // State to indicate loading status
+  // State to hold the COMPLETE list of projects from the API for filtering
+  const [fullProjectList, setFullProjectList] = useState<Project[]>([]);
+  
+  // State for loading and error handling
   const [loading, setLoading] = useState(true);
-  // State to capture any error during fetch
   const [error, setError] = useState('');
+  
+  // We can add search/filter state here if needed in the future,
+  // but for now, we'll just display a limited number.
 
-  // Fetch projects on component mount
   useEffect(() => {
     fetchProjects()
       .then((data: Project[]) => {
-        // Only display first 6 projects for homepage preview
-        setProjects(data.slice(0, 3)); // <-- LIMIT TO 3 FOR HOMEPAGE
-        // Set loading to false after data is fetched
+        // Store the ENTIRE list of projects. No .slice() here.
+        setFullProjectList(data); 
         setLoading(false);
       })
       .catch((err: unknown) => {
@@ -38,15 +38,13 @@ const ProjectSection: React.FC = () => {
       });
   }, []);
 
-  // Loading and error states
   if (loading) return <div className="text-center py-20">Loading projects...</div>;
   if (error) return <div className="text-center text-red-500 py-20">{error}</div>;
 
   return (
     <section id="projects" className="py-16 px-6 bg-gradient-to-b from-[#191a23] to-[#1a1b25] relative">
       <div className="max-w-7xl mx-auto">
-
-        {/* Section Heading */}
+        {/* Section Header - No Changes */}
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
             Featured <span className="text-blue-400">Projects</span>
@@ -56,24 +54,21 @@ const ProjectSection: React.FC = () => {
           </p>
         </div>
 
-        {/* Project Cards Grid */}
+        {/* Projects Grid - THE ONLY CHANGE IS HERE */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((project) => (
+          {/* We now .slice(0, 6) the full list to only display the first 6 projects */}
+          {fullProjectList.slice(0,3).map((project) => (
             <div
               key={project.id}
               className="bg-gray-800/30 backdrop-blur-sm rounded-xl overflow-hidden shadow-xl border border-gray-700/50 transition-all duration-500 card-glow group"
             >
-              {/* Project Image Section */}
               <div className="relative overflow-hidden">
                 <img
                   src={project.image}
                   alt={project.title}
                   className="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-110"
                 />
-                {/* Dark overlay effect */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-
-                {/* Display first tag on top-right */}
                 <div className="absolute top-3 right-3">
                   {project.tags.length > 0 && (
                     <span className="bg-black/50 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs font-medium">
@@ -82,17 +77,9 @@ const ProjectSection: React.FC = () => {
                   )}
                 </div>
               </div>
-
-              {/* Project Info Section */}
               <div className="p-4 flex flex-col flex-grow">
-                <h3 className="text-lg font-bold text-white mb-2 leading-tight group-hover:text-blue-400 transition-colors duration-300">
-                  {project.title}
-                </h3>
-                <p className="text-sm text-gray-400 mb-4 leading-relaxed flex-grow">
-                  {project.description}
-                </p>
-
-                {/* Display all tags */}
+                <h3 className="text-lg font-bold text-white mb-2 leading-tight group-hover:text-blue-400 transition-colors duration-300">{project.title}</h3>
+                <p className="text-sm text-gray-400 mb-4 leading-relaxed flex-grow">{project.description}</p>
                 <div className="flex flex-wrap gap-1 mb-4">
                   {project.tags.map((tag) => (
                     <span
@@ -103,8 +90,6 @@ const ProjectSection: React.FC = () => {
                     </span>
                   ))}
                 </div>
-
-                {/* GitHub Button */}
                 <a
                   href={project.github_link}
                   target="_blank"
@@ -118,8 +103,8 @@ const ProjectSection: React.FC = () => {
             </div>
           ))}
         </div>
-
-        {/* View All Projects Button */}
+        
+        {/* Explore All Projects Button - No Changes */}
         <div className="text-center mt-12">
           <Link 
             to="/projects" 

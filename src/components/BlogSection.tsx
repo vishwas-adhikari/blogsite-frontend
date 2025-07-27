@@ -16,7 +16,10 @@ interface BlogPost {
 }
 
 const BlogSection: React.FC = () => {
-  const [allPosts, setAllPosts] = useState<BlogPost[]>([]);
+  // State to hold the COMPLETE list of posts from the API for filtering
+  const [fullPostList, setFullPostList] = useState<BlogPost[]>([]);
+  
+  // State for managing the UI (filters, loading, etc.)
   const [allTags, setAllTags] = useState<string[]>(['All']);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTag, setSelectedTag] = useState('All');
@@ -26,10 +29,10 @@ const BlogSection: React.FC = () => {
   useEffect(() => {
     fetchBlogPosts()
       .then((data: BlogPost[]) => {
-        // --- THIS IS THE CHANGE ---
-        // We now only take the first 6 items from the API response for the homepage.
-        setAllPosts(data.slice(0, 3)); // <-- LIMIT TO 3 FOR HOMEPAGE
-        // Dynamically create the list of unique tags from the fetched posts
+        // Store the ENTIRE list of posts from the API. No .slice() here.
+        setFullPostList(data); 
+        
+        // Dynamically create the tag list from the full data set
         const uniqueTags = new Set(data.flatMap((post) => post.tags.map(tag => tag.name)));
         setAllTags(['All', ...Array.from(uniqueTags)]);
         setLoading(false);
@@ -42,9 +45,10 @@ const BlogSection: React.FC = () => {
       });
   }, []);
 
-  const filteredPosts = allPosts.filter(post => {
+  // Filtering logic now runs on the COMPLETE list of posts
+  const filteredPosts = fullPostList.filter(post => {
     const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()); // Searching excerpt now
+                         post.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesTag = selectedTag === 'All' || post.tags.some(tag => tag.name === selectedTag);
     return matchesSearch && matchesTag;
   });
@@ -55,7 +59,7 @@ const BlogSection: React.FC = () => {
   return (
     <section id="blogs" className="py-16 px-6 bg-[#191a23] relative overflow-hidden">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
+        {/* Header - No Changes */}
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
             Latest <span className="text-green-400">Blogs</span>
@@ -65,7 +69,7 @@ const BlogSection: React.FC = () => {
           </p>
         </div>
 
-        {/* Search and Filter */}
+        {/* Search and Filter - No Changes */}
         <div className="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
           <div className="relative w-full md:w-80">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -94,9 +98,10 @@ const BlogSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Blog Grid */}
+        {/* Blog Grid - THE ONLY CHANGE IS HERE */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredPosts.map((post) => (
+          {/* We now .slice(0, 6) the *filtered* list, not the original one */}
+          {filteredPosts.slice(0,3).map((post) => (
             <article
               key={post.id}
               className="bg-gray-800/50 rounded-xl overflow-hidden shadow-xl border border-gray-700/50 transition-all duration-500 card-glow group"
@@ -134,6 +139,7 @@ const BlogSection: React.FC = () => {
           ))}
         </div>
 
+        {/* No results message - No Changes */}
         {filteredPosts.length === 0 && !loading && (
           <div className="text-center py-12">
             <Filter className="w-12 h-12 text-gray-600 mx-auto mb-3" />
@@ -141,7 +147,7 @@ const BlogSection: React.FC = () => {
           </div>
         )}
 
-        {/* --- ADD THIS NEW SECTION AT THE BOTTOM --- */}
+        {/* Explore All Articles Button - No Changes */}
         <div className="text-center mt-12">
           <Link 
             to="/blogs" 
