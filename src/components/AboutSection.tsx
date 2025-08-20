@@ -34,7 +34,7 @@ const AboutSection: React.FC = () => {
     { icon: <Award className="w-6 h-6" />, label: "Certifications", value: aboutData.certifications },
     { icon: <Users className="w-6 h-6" />, label: "CTF Teams", value: aboutData.ctf_teams },
     { icon: <Calendar className="w-6 h-6" />, label: "Experience", value: `${aboutData.experience_years}+ Years` },
-    { icon: <Target className="w-6 h-6" />, label: "CTF's Participated", value: `${aboutData.vulnerabilities_found}+ Found` }
+    { icon: <Target className="w-6 h-6" />, label: "CTF's Participated", value: `${aboutData.vulnerabilities_found}+ played` }
   ];
 
   // Helper to find a specific social link
