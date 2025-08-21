@@ -40,11 +40,11 @@ const Hero: React.FC = () => {
         <TypeAnimation
           sequence={[
             'Welcome to My Digital Playground',
-            3000, // Wait 3 seconds after typing
+            5000, // Wait 3 seconds after typing
           ]}
           wrapper="h1"
           cursor={true}
-          speed={50}
+          speed={30}
           // The className is copied directly from your original <h1> tag
           className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white mb-6 tracking-tight leading-tight"
           repeat={Infinity} // Use Infinity to make it repeat, or 0 to type only once

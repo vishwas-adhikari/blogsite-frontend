@@ -61,7 +61,7 @@ const Navigation: React.FC = () => {
                 // THE CHANGES ARE HERE:
                 // - Font size increased from 'text-xs' to 'text-sm'
                 // - Padding (px- and py-) increased slightly for a larger button area
-                className="bg-white text-black px-7 py-2.5 rounded-full font-semibold text-sm tracking-wide shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300"
+                className="bg-white text-black px-6 py-2 rounded-full font-semibold text-sm tracking-wide shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300"
               >
                 {item}
               </button>
