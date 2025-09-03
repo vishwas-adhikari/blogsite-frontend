@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom'; // Import Link for the logo
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Menu, X, Terminal } from 'lucide-react';
 
 const Navigation: React.FC = () => {
@@ -18,7 +18,6 @@ const Navigation: React.FC = () => {
   }, []);
 
   const scrollToSection = (sectionId: string) => {
-    // This logic is good, no changes needed here.
     if (location.pathname !== '/') {
       navigate('/');
       setTimeout(() => {
@@ -43,7 +42,7 @@ const Navigation: React.FC = () => {
     }`}>
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          {/* Logo - Changed to a <Link> for better accessibility */}
+          {/* Logo */}
           <Link 
             to="/"
             className="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-300"
@@ -52,15 +51,13 @@ const Navigation: React.FC = () => {
             <span className="text-xl font-bold text-white tracking-tight">Vishwas S Adhikari</span>
           </Link>
 
-          {/* --- DESKTOP NAVIGATION (WITH SIZE INCREASE) --- */}
+          {/* --- DESKTOP NAVIGATION (WITH CTFS ADDED) --- */}
           <div className="hidden md:flex items-center space-x-1">
-            {['Home', 'Blogs', 'Projects', 'About'].map((item) => (
+            {/* The list of items now includes 'CTFs' */}
+            {['Home', 'Blogs', 'Projects', 'CTFs', 'About'].map((item) => (
               <button
                 key={item}
                 onClick={() => scrollToSection(item.toLowerCase())}
-                // THE CHANGES ARE HERE:
-                // - Font size increased from 'text-xs' to 'text-sm'
-                // - Padding (px- and py-) increased slightly for a larger button area
                 className="bg-white text-black px-6 py-2 rounded-full font-semibold text-sm tracking-wide shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300"
               >
                 {item}
@@ -77,11 +74,12 @@ const Navigation: React.FC = () => {
           </button>
         </div>
 
-        {/* Mobile Menu - no size changes needed here as it's already a good size */}
+        {/* --- MOBILE MENU (WITH CTFS ADDED) --- */}
         {isMobileMenuOpen && (
           <div className="md:hidden mt-3 bg-[#191a23]/95 backdrop-blur-lg rounded-2xl p-4 shadow-2xl border border-gray-800">
             <div className="flex flex-col space-y-2">
-              {['Home', 'Blogs', 'Projects', 'About'].map((item) => (
+              {/* The list of items for the mobile menu now also includes 'CTFs' */}
+              {['Home', 'Blogs', 'Projects', 'CTFs', 'About'].map((item) => (
                 <button
                   key={item}
                   onClick={() => scrollToSection(item.toLowerCase())}
