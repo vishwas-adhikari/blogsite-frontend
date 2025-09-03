@@ -7,36 +7,41 @@ import ProjectSection from './components/ProjectSection';
 import AboutSection from './components/AboutSection';
 import Footer from './components/Footer';
 import BlogDetail from './components/BlogDetail';
-// Import the new AllBlogsPage component
 import AllBlogsPage from './components/AllBlogsPage';
-import AllProjectsPage from './components/AllProjectsPage'; // <-- IMPORT NEW PAGE
+import AllProjectsPage from './components/AllProjectsPage';
+
+// --- ADD THESE THREE NEW IMPORTS ---
+import CtfSection from './components/CtfSection';
+import AllCtfsPage from './components/AllCtfsPage';
+import CtfDetailPage from './components/CtfDetailPage';
 
 // A simple component for the homepage layout
+// --- ADD THE NEW <CtfSection /> TO THE HOMEPAGE LAYOUT ---
 const HomePage = () => (
   <>
     <Hero />
     <BlogSection />
     <ProjectSection />
+    <CtfSection /> 
     <AboutSection />
   </>
 );
 
 function App() {
   return (
-    // We REMOVED the <Router> from here. This is just a div now.
     <div className="min-h-screen bg-[#191a23] text-white overflow-x-hidden">
       <Navigation />
       <main>
         <Routes>
+          {/* Your existing routes */}
           <Route path="/" element={<HomePage />} />
-          
-          {/* THE CRITICAL FIX: The path now correctly uses ':slug' */}
           <Route path="/blog/:slug" element={<BlogDetail />} />
+          <Route path="/blogs" element={<AllBlogsPage />} />
+          <Route path="/projects" element={<AllProjectsPage />} />
 
-            
-            {/* --- ADD THESE TWO NEW ROUTES --- */}
-            <Route path="/blogs" element={<AllBlogsPage />} />
-            <Route path="/projects" element={<AllProjectsPage />} />
+          {/* --- ADD THESE TWO NEW ROUTES FOR THE CTF FEATURE --- */}
+          <Route path="/ctfs" element={<AllCtfsPage />} />
+          <Route path="/ctf/:slug" element={<CtfDetailPage />} />
         </Routes>
       </main>
       <Footer />

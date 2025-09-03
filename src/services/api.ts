@@ -41,3 +41,17 @@ export const fetchAboutInfo = async () => {
   const data = await response.json();
   return data[0]; 
 };
+
+// ... (your existing fetchBlogPosts, fetchProjects, etc., are fine) ...
+
+export const fetchCtfs = async () => {
+  const response = await fetch(`${API_BASE_URL}/ctfs/`);
+  if (!response.ok) throw new Error('Failed to fetch CTF achievements');
+  return response.json();
+};
+
+export const fetchCtfBySlug = async (slug: string) => {
+  const response = await fetch(`${API_BASE_URL}/ctfs/${slug}/`);
+  if (!response.ok) throw new Error('Failed to fetch CTF details');
+  return response.json();
+};
