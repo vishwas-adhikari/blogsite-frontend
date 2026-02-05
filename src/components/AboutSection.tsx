@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Download, Github, Linkedin, Mail, Award, Users, Calendar, Target } from 'lucide-react';
 import { fetchAboutInfo } from '../services/api';
+// --- 1. IMPORT THE HELPER ---
+import { getImageUrl } from '../utils/imageUrl'; 
 
 // Define the shape of the data coming from your API
 interface AboutData {
@@ -55,13 +57,12 @@ const AboutSection: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left Side - Content (Now powered by API data) */}
+          {/* Left Side - Content */}
           <div className="space-y-6">
             <div>
               <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 leading-tight">
                 Who I Am
               </h3>
-              {/* Splitting the bio text into paragraphs */}
               <div className="space-y-4 text-base text-gray-300 leading-relaxed">
                 {aboutData.bio.split('\n').map((paragraph, index) => (
                   <p key={index}>{paragraph}</p>
@@ -69,24 +70,32 @@ const AboutSection: React.FC = () => {
               </div>
             </div>
 
-            {/* Achievements Grid (Now dynamic) */}
+            {/* Achievements Grid */}
             <div className="grid grid-cols-2 gap-3">
               {achievements.map((achievement, index) => (
                 <div key={index} className="bg-gray-800/50 rounded-lg p-3 border border-gray-700/50 hover:bg-gray-800/70 transition-all duration-300">
                   <div className="flex items-center space-x-2 mb-1">
-                    <div className="text-purple-400">{achievement.icon}</div>
-                    <span className="text-xs font-medium text-gray-400">{achievement.label}</span>
+                    <div className="text-purple-400">
+                      {achievement.icon}
+                    </div>
+                    <span className="text-xs font-medium text-gray-400">
+                      {achievement.label}
+                    </span>
                   </div>
-                  <div className="text-base font-bold text-white">{achievement.value}</div>
+                  <div className="text-base font-bold text-white">
+                    {achievement.value}
+                  </div>
                 </div>
               ))}
             </div>
 
-            {/* Social Links (Now dynamic) */}
+            {/* Social Links */}
             <div className="flex flex-col sm:flex-row gap-3">
+              {/* --- 2. APPLY FIX TO RESUME LINK --- */}
               <a 
-                href={aboutData.resume} 
-                download
+                href={getImageUrl(aboutData.resume)} 
+                target="_blank"
+                rel="noopener noreferrer"
                 className="bg-white text-black px-6 py-3 rounded-full font-bold text-sm flex items-center justify-center space-x-2 shadow-2xl hover:scale-105 transition-all duration-300"
               >
                 <Download className="w-4 h-4" />
@@ -94,29 +103,45 @@ const AboutSection: React.FC = () => {
               </a>
               
               <div className="flex gap-3">
-                <a href={getSocialUrl('github')} target="_blank" rel="noopener noreferrer" className="bg-gray-800 text-white p-3 rounded-full hover:bg-white hover:text-black transition-all duration-300 border border-gray-700 hover:shadow-2xl">
+                <a
+                  href={getSocialUrl('github')}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-gray-800 text-white p-3 rounded-full hover:bg-white hover:text-black transition-all duration-300 border border-gray-700 hover:shadow-2xl"
+                >
                   <Github className="w-5 h-5" />
                 </a>
-                <a href={getSocialUrl('linkedin')} target="_blank" rel="noopener noreferrer" className="bg-gray-800 text-white p-3 rounded-full hover:bg-white hover:text-black transition-all duration-300 border border-gray-700 hover:shadow-2xl">
+                <a
+                  href={getSocialUrl('linkedin')}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-gray-800 text-white p-3 rounded-full hover:bg-white hover:text-black transition-all duration-300 border border-gray-700 hover:shadow-2xl"
+                >
                   <Linkedin className="w-5 h-5" />
                 </a>
-                <a href={getSocialUrl('email')} className="bg-gray-800 text-white p-3 rounded-full hover:bg-white hover:text-black transition-all duration-300 border border-gray-700 hover:shadow-2xl">
+                <a
+                  href={getSocialUrl('email')}
+                  className="bg-gray-800 text-white p-3 rounded-full hover:bg-white hover:text-black transition-all duration-300 border border-gray-700 hover:shadow-2xl"
+                >
                   <Mail className="w-5 h-5" />
                 </a>
               </div>
             </div>
           </div>
 
-          {/* Right Side - Profile Image (Now dynamic) */}
+          {/* Right Side - Profile Image */}
           <div className="flex justify-center lg:justify-end">
             <div className="relative">
               <div className="w-64 h-64 md:w-80 md:h-80 rounded-2xl overflow-hidden border-4 border-white/10 shadow-2xl glow-purple">
                 <img
-                  src={aboutData.profile_image}
+                  // --- 3. APPLY FIX TO PROFILE IMAGE ---
+                  src={getImageUrl(aboutData.profile_image)}
                   alt={aboutData.full_name}
                   className="w-full h-full object-cover"
                 />
               </div>
+              
+              {/* Floating Elements */}
               <div className="absolute -top-3 -right-3 bg-green-400 text-black p-2 rounded-full shadow-2xl">
                 <Award className="w-5 h-5" />
               </div>

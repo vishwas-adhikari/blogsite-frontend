@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'; // Import Link for the "Explore All" button
+import { Link } from 'react-router-dom';
 import { Github } from 'lucide-react';
 import { fetchProjects } from '../services/api';
+// --- 1. IMPORT THE HELPER ---
+import { getImageUrl } from '../utils/imageUrl'; 
 
 interface Project {
   id: number;
@@ -13,20 +15,13 @@ interface Project {
 }
 
 const ProjectSection: React.FC = () => {
-  // State to hold the COMPLETE list of projects from the API for filtering
   const [fullProjectList, setFullProjectList] = useState<Project[]>([]);
-  
-  // State for loading and error handling
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
-  // We can add search/filter state here if needed in the future,
-  // but for now, we'll just display a limited number.
 
   useEffect(() => {
     fetchProjects()
       .then((data: Project[]) => {
-        // Store the ENTIRE list of projects. No .slice() here.
         setFullProjectList(data); 
         setLoading(false);
       })
@@ -38,13 +33,12 @@ const ProjectSection: React.FC = () => {
       });
   }, []);
 
-  if (loading) return <div className="text-center py-20">Loading projects...</div>;
+  if (loading) return <div className="text-center py-20 text-gray-400 font-mono">Loading projects...</div>;
   if (error) return <div className="text-center text-red-500 py-20">{error}</div>;
 
   return (
     <section id="projects" className="py-16 px-6 bg-gradient-to-b from-[#191a23] to-[#1a1b25] relative">
       <div className="max-w-7xl mx-auto">
-        {/* Section Header - No Changes */}
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
             Featured <span className="text-blue-400">Projects</span>
@@ -54,17 +48,16 @@ const ProjectSection: React.FC = () => {
           </p>
         </div>
 
-        {/* Projects Grid - THE ONLY CHANGE IS HERE */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* We now .slice(0, 6) the full list to only display the first 6 projects */}
-          {fullProjectList.slice(0,6).map((project) => (
+          {fullProjectList.slice(0, 6).map((project) => (
             <div
               key={project.id}
-              className="bg-gray-800/30 backdrop-blur-sm rounded-xl overflow-hidden shadow-xl border border-gray-700/50 transition-all duration-500 card-glow group"
+              className="bg-gray-800/30 backdrop-blur-sm rounded-xl overflow-hidden shadow-xl border border-gray-700/50 transition-all duration-500 card-glow group flex flex-col"
             >
               <div className="relative overflow-hidden">
                 <img
-                  src={project.image}
+                  // --- 2. APPLY THE IMAGE FIX HERE ---
+                  src={getImageUrl(project.image)}
                   alt={project.title}
                   className="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-110"
                 />
@@ -77,9 +70,16 @@ const ProjectSection: React.FC = () => {
                   )}
                 </div>
               </div>
+
               <div className="p-4 flex flex-col flex-grow">
-                <h3 className="text-lg font-bold text-white mb-2 leading-tight group-hover:text-blue-400 transition-colors duration-300">{project.title}</h3>
-                <p className="text-sm text-gray-400 mb-4 leading-relaxed flex-grow">{project.description}</p>
+                <h3 className="text-lg font-bold text-white mb-2 leading-tight group-hover:text-blue-400 transition-colors duration-300">
+                  {project.title}
+                </h3>
+
+                <p className="text-sm text-gray-400 mb-4 leading-relaxed flex-grow">
+                  {project.description}
+                </p>
+
                 <div className="flex flex-wrap gap-1 mb-4">
                   {project.tags.map((tag) => (
                     <span
@@ -90,11 +90,12 @@ const ProjectSection: React.FC = () => {
                     </span>
                   ))}
                 </div>
+
                 <a
                   href={project.github_link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full mt-auto bg-white text-black py-2 px-3 rounded-full font-semibold text-sm flex items-center justify-center space-x-1"
+                  className="w-full mt-auto bg-white text-black py-2 px-3 rounded-full font-semibold text-sm flex items-center justify-center space-x-1 hover:bg-gray-200 transition-colors"
                 >
                   <Github className="w-3 h-3" />
                   <span>GitHub</span>
@@ -104,11 +105,10 @@ const ProjectSection: React.FC = () => {
           ))}
         </div>
         
-        {/* Explore All Projects Button - No Changes */}
         <div className="text-center mt-12">
           <Link 
             to="/projects" 
-            className="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-full hover:bg-white hover:text-black transition-colors"
+            className="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-full hover:bg-white hover:text-black transition-all duration-300 inline-block"
           >
             Explore All Projects
           </Link>
