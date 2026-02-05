@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 import BlogDetail from './components/BlogDetail';
 import AllBlogsPage from './components/AllBlogsPage';
 import AllProjectsPage from './components/AllProjectsPage';
+import AdminPortal from './components/AdminPortal'; // Import the portal
 
 // --- ADD THESE THREE NEW IMPORTS ---
 import CtfSection from './components/CtfSection';
@@ -42,6 +43,9 @@ function App() {
           {/* --- ADD THESE TWO NEW ROUTES FOR THE CTF FEATURE --- */}
           <Route path="/ctfs" element={<AllCtfsPage />} />
           <Route path="/ctf/:slug" element={<CtfDetailPage />} />
+
+        
+          <Route path="/admin-gate-secure-123" element={<AdminPortal />} />
         </Routes>
       </main>
       <Footer />

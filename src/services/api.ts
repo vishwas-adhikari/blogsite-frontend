@@ -75,7 +75,7 @@ export const fetchProjects = async () => {
     `)
     // --- THIS IS THE FIX ---
     // Change 'true' to 'false' to show the highest ID (most recent) first
-    .order('id', { ascending: false }); 
+    .order('created_at', { ascending: false }); 
 
   if (error) throw error;
   return transformTags(data);
