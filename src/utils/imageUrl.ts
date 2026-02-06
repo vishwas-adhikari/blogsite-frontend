@@ -31,3 +31,17 @@ export const createExcerpt = (html: string, maxLength: number = 150) => {
     ? plainText.substring(0, maxLength) + '...'
     : plainText;
 };
+
+
+/**
+ * Generates a folder path string based on the current date.
+ * Example: "uploads/2026/02/06"
+ */
+export const getDatePath = (baseFolder: string) => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0'); // Adds leading zero
+  const day = String(now.getDate()).padStart(2, '0');
+  
+  return `${baseFolder}/${year}/${month}/${day}`;
+};
