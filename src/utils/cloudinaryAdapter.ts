@@ -1,3 +1,6 @@
+import { getDatePath } from './imageUrl'; // <-- Import the helper
+
+
 export class CloudinaryUploadAdapter {
   loader: any;
 
@@ -11,7 +14,10 @@ export class CloudinaryUploadAdapter {
     formData.append('file', file);
     
      // --- CHANGE THIS to your new preset name ---
-    formData.append('upload_preset', 'blog_unsigned_preset'); // Must match the preset you created
+    formData.append('upload_preset', 'blog_unsigned_preset');
+    
+    // --- UPDATED: Use dynamic date pathing ---
+    formData.append('folder', getDatePath('uploads')); 
 
     const response = await fetch(
       `https://api.cloudinary.com/v1_1/daoqvaxeq/image/upload`,
