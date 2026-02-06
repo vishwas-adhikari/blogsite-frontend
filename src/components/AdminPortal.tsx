@@ -3,12 +3,13 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { supabase } from '../services/supabase';
 import { MyCustomUploadAdapterPlugin } from '../utils/cloudinaryAdapter';
-import { Upload, Tag as TagIcon, LogOut, Loader2, Trophy, BookOpen, Layout, Plus, Edit3, XCircle, RotateCcw } from 'lucide-react';
+import { Upload, Tag as TagIcon, LogOut, Loader2, Trophy, BookOpen, Layout, Plus, Edit3, XCircle, RotateCcw, Filter } from 'lucide-react';
 import { getDatePath } from '../utils/imageUrl';
 
 interface Tag {
   id: number;
   name: string;
+  is_category: boolean;
 }
 
 interface ListItem {
@@ -349,17 +350,44 @@ const AdminPortal: React.FC = () => {
                 </label>
               </div>
 
+              {/* --- TAG MANAGER WITH CATEGORY TOGGLE --- */}
               {(activeTab === 'blog' || activeTab === 'project') && (
                 <div className="space-y-4">
-                  <label className="text-[10px] font-black uppercase text-gray-400 tracking-[0.2em] flex items-center gap-2"><TagIcon size={12} /> Metadata Tags</label>
+                  <label className="text-[10px] font-black uppercase text-gray-500 tracking-[0.2em] flex items-center gap-2">
+                    <TagIcon size={12} /> Metadata Tags
+                  </label>
                   <div className="flex gap-2">
-                    <input value={newTagName} placeholder="Create..." className="flex-grow p-3 bg-[#2a2a2a] border border-gray-600 rounded-xl text-sm text-white outline-none focus:border-green-500 placeholder-gray-500" onChange={(e) => setNewTagName(e.target.value)} />
-                    <button onClick={handleAddTag} className="bg-white text-black p-3 rounded-xl hover:bg-green-500 transition-colors"><Plus size={18}/></button>
+                    <input value={newTagName} placeholder="Create..." className="flex-grow p-3 bg-[#0f0f11] border border-white/10 rounded-xl text-sm" onChange={(e) => setNewTagName(e.target.value)} />
+                    <button onClick={handleAddTag} className="bg-white text-black p-3 rounded-xl hover:bg-green-500"><Plus size={18}/></button>
                   </div>
+                  
                   <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
                     {availableTags.map(tag => (
-                      <button key={tag.id} onClick={() => selectedTagIds.includes(tag.id) ? setSelectedTagIds(selectedTagIds.filter(id => id !== tag.id)) : setSelectedTagIds([...selectedTagIds, tag.id])} 
-                        className={`px-3 py-1.5 rounded-full text-[11px] font-bold transition-all border ${selectedTagIds.includes(tag.id) ? 'bg-green-500 text-black border-green-500' : 'bg-transparent text-gray-400 border-gray-600 hover:border-white'}`}>{tag.name}</button>
+                      <div key={tag.id} className="flex items-center">
+                        {/* Main Tag Selection Button */}
+                        <button 
+                          onClick={() => selectedTagIds.includes(tag.id) ? setSelectedTagIds(selectedTagIds.filter(id => id !== tag.id)) : setSelectedTagIds([...selectedTagIds, tag.id])} 
+                          className={`px-3 py-1.5 rounded-l-full text-[11px] font-bold transition-all border ${
+                            selectedTagIds.includes(tag.id) ? 'bg-green-500 text-black border-green-500' : 'bg-transparent text-gray-500 border-white/10 hover:border-white/40'
+                          }`}
+                        >
+                          {tag.name}
+                        </button>
+
+                        {/* THE CATEGORY TOGGLE (PURPLE ICON) */}
+                        <button
+                          onClick={async () => {
+                            const { error } = await supabase.from('Tag').update({ is_category: !tag.is_category }).eq('id', tag.id);
+                            if (!error) fetchTags(); // Re-fetch to update UI
+                          }}
+                          className={`px-2 py-1.5 rounded-r-full border-y border-r text-[11px] transition-all ${
+                            tag.is_category ? 'bg-purple-600 border-purple-600 text-white' : 'bg-gray-800 border-white/10 text-gray-600 hover:text-white'
+                          }`}
+                          title="Toggle as Homepage Category"
+                        >
+                          <Filter size={10} />
+                        </button>
+                      </div>
                     ))}
                   </div>
                 </div>

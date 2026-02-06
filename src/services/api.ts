@@ -139,3 +139,15 @@ export const fetchAboutInfo = async () => {
 // Note: The newsletter subscription function (subscribeToNewsletter) 
 // will need to be handled differently (e.g., Supabase Edge Functions)
 // or removed for now, as Supabase is a database, not a backend logic server.
+
+
+export const fetchCategories = async () => {
+  const { data, error } = await supabase
+    .from('Tag')
+    .select('*')
+    .eq('is_category', true) // <-- This is the filter you just created
+    .order('name', { ascending: true });
+
+  if (error) throw error;
+  return data;
+};

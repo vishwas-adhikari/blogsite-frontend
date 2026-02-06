@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, Clock, ExternalLink, Search, Filter } from 'lucide-react';
-import { fetchBlogPosts } from '../services/api';
+import { fetchBlogPosts, fetchCategories } from '../services/api'; // Added fetchCategories
 import { getImageUrl, createExcerpt } from '../utils/imageUrl';
 
 interface BlogPost {
@@ -25,20 +25,22 @@ const BlogSection: React.FC = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetchBlogPosts()
-      .then((data: BlogPost[]) => {
-        setFullPostList(data);
-        const uniqueTags = new Set(
-          data.flatMap((post) => post.tags.map((tag) => tag.name))
-        );
-        setAllTags(['All', ...Array.from(uniqueTags)]);
-        setLoading(false);
-      })
+    // 1. Fetch Blog Posts
+    const getBlogs = fetchBlogPosts().then((data: BlogPost[]) => {
+      setFullPostList(data);
+    });
+
+    // 2. Fetch Curated Categories for the Filter Bar
+    const getCategories = fetchCategories().then((tags: any[]) => {
+      setAllTags(['All', ...tags.map((t) => t.name)]);
+    });
+
+    // Run both, then stop loading
+    Promise.all([getBlogs, getCategories])
+      .then(() => setLoading(false))
       .catch((err: unknown) => {
-        console.error('Failed to fetch blog posts:', err);
-        const errorMessage =
-          err instanceof Error ? err.message : 'An unknown error occurred.';
-        setError(`Could not load articles: ${errorMessage}`);
+        console.error('Failed to fetch data:', err);
+        setError('Could not load content. Check backend connection.');
         setLoading(false);
       });
   }, []);
@@ -58,21 +60,19 @@ const BlogSection: React.FC = () => {
     return matchesSearch && matchesTag;
   });
 
-  if (loading) return <div className="text-center py-20">Loading articles...</div>;
-  if (error)
-    return <div className="text-center text-red-500 py-20">{error}</div>;
+  if (loading) return <div className="text-center py-20 text-gray-400 font-mono">INITIALIZING_FEED...</div>;
+  if (error) return <div className="text-center text-red-500 py-20">{error}</div>;
 
   return (
     <section id="blogs" className="py-16 px-6 bg-[#191a23] relative overflow-hidden">
       <div className="max-w-7xl mx-auto">
-
         {/* Header */}
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
             Latest <span className="text-green-400">Blogs</span>
           </h2>
           <p className="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            Deep dives into cybersecurity, CTF writeups, and technical insights from the front lines of digital security.
+            Deep dives into cybersecurity, CTF writeups, and technical insights.
           </p>
         </div>
 
@@ -111,7 +111,7 @@ const BlogSection: React.FC = () => {
           {filteredPosts.slice(0, 9).map((post) => (
             <article
               key={post.id}
-              className="bg-gray-800/50 rounded-xl overflow-hidden shadow-xl border border-gray-700/50 transition-all duration-500 group"
+              className="bg-gray-800/50 rounded-xl overflow-hidden shadow-xl border border-gray-700/50 transition-all duration-500 group flex flex-col"
             >
               <div className="relative overflow-hidden">
                 <img
@@ -122,14 +122,12 @@ const BlogSection: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
               </div>
 
-              <div className="p-4">
+              <div className="p-4 flex flex-col flex-grow">
                 <div className="flex items-center justify-between text-xs text-gray-400 mb-3">
                   <div className="flex items-center space-x-3">
                     <div className="flex items-center space-x-1">
                       <Calendar className="w-3 h-3" />
-                      <span>
-                        {new Date(post.publication_date).toLocaleDateString()}
-                      </span>
+                      <span>{new Date(post.publication_date).toLocaleDateString()}</span>
                     </div>
                     <div className="flex items-center space-x-1">
                       <Clock className="w-3 h-3" />
@@ -138,7 +136,7 @@ const BlogSection: React.FC = () => {
                   </div>
                 </div>
 
-                <h3 className="text-lg font-bold text-white mb-2 group-hover:text-green-400 transition-colors">
+                <h3 className="text-lg font-bold text-white mb-2 group-hover:text-green-400 transition-colors flex-grow">
                   {post.title}
                 </h3>
 
@@ -148,10 +146,7 @@ const BlogSection: React.FC = () => {
 
                 <div className="flex flex-wrap gap-1 mb-4">
                   {post.tags.map((tag) => (
-                    <span
-                      key={tag.id}
-                      className="px-2 py-1 text-xs bg-gray-700 text-gray-300 rounded-full"
-                    >
+                    <span key={tag.id} className="px-2 py-1 text-[10px] uppercase font-bold bg-gray-700 text-gray-300 rounded-full">
                       {tag.name}
                     </span>
                   ))}
@@ -159,9 +154,9 @@ const BlogSection: React.FC = () => {
 
                 <Link
                   to={`/blog/${post.slug}`}
-                  className="w-full bg-white text-black py-2 px-4 rounded-full font-semibold text-sm hover:scale-105 transition-all flex items-center justify-center space-x-2"
+                  className="w-full mt-auto bg-white text-black py-2.5 px-4 rounded-full font-bold text-sm hover:scale-105 transition-all flex items-center justify-center space-x-2"
                 >
-                  <span>Read more</span>
+                  <span>Read fully</span>
                   <ExternalLink className="w-3 h-3" />
                 </Link>
               </div>
@@ -172,17 +167,12 @@ const BlogSection: React.FC = () => {
         {filteredPosts.length === 0 && !loading && (
           <div className="text-center py-12">
             <Filter className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-            <p className="text-lg text-gray-400">
-              No articles found matching your criteria.
-            </p>
+            <p className="text-lg text-gray-400">No matching intel found.</p>
           </div>
         )}
 
         <div className="text-center mt-12">
-          <Link
-            to="/blogs"
-            className="border-2 border-white text-white font-bold py-3 px-8 rounded-full hover:bg-white hover:text-black transition"
-          >
+          <Link to="/blogs" className="border-2 border-white text-white font-bold py-3 px-8 rounded-full hover:bg-white hover:text-black transition">
             Explore All Articles
           </Link>
         </div>
