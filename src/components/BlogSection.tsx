@@ -156,7 +156,7 @@ const BlogSection: React.FC = () => {
                   to={`/blog/${post.slug}`}
                   className="w-full mt-auto bg-white text-black py-2.5 px-4 rounded-full font-bold text-sm hover:scale-105 transition-all flex items-center justify-center space-x-2"
                 >
-                  <span>Read fully</span>
+                  <span>Read more</span>
                   <ExternalLink className="w-3 h-3" />
                 </Link>
               </div>
